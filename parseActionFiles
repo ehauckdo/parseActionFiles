@@ -32,7 +32,7 @@ replayRecords = {}
 def main(args):
 
     if len(args) < 1:
-        print("usage: process action-files")
+        print("usage: ./parseActionFiles directoryName")
         sys.exit(1)
 
     path = os.getcwd()+"/"+args[0]+"/*.txt"
