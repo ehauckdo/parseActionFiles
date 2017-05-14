@@ -22,10 +22,6 @@ class GameRecord:
         return [self.name, self.victories*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" +/- {0:.2f}".format(numpy.std(self.scores)), 
                      numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified*100/self.total_games]
-        
-
-games = ["aliens", "boulderdash", "butterflies", "chase", "frogs",
-        "missilecommand", "portals", "sokoban", "survivezombies", "zelda"]
 
 replayRecords = {}
 
@@ -36,6 +32,13 @@ def main(args):
         sys.exit(1)
 
     path = os.getcwd()+"/"+args[0]+"/*.txt"
+
+    if args[0] == "-m":
+        path = os.getcwd()+"/"+args[1]+"/*.txt"
+        multi = True
+    else:
+        multi = False
+
     files_list = glob.glob(path)
     print(path)   
  
@@ -43,28 +46,49 @@ def main(args):
     for file in files_list:
         with open(file, "r") as ins:
             # get name of the game
-            game_name = file.split("/")[-1].split("_")[2]
+            game_name = file.split("/")[-1].split("_")[3]
 
             # if needed create a new list of records for this game
             if game_name not in replayRecords.keys():
                 replayRecords[game_name] = GameRecord(game_name)
 
-            for line in ins:
-                line = line.strip().split(" ")
-                victory = line[1]
-                score = line[2] 
-                if float(score) == -1000:
-                    replayRecords[game_name].disqualified += 1
-                else:
-                    replayRecords[game_name].scores.append(float(score))
-                replayRecords[game_name].victories += int(victory)
-                replayRecords[game_name].total_games += 1
-                break
+            if multi == False:
+                for line in ins:
+                    line = line.strip().split(" ")
+                    victory = line[1]
+                    score = line[2] 
+                    if float(score) == -1000:
+                        replayRecords[game_name].disqualified += 1
+                    else:
+                        replayRecords[game_name].scores.append(float(score))
+                    replayRecords[game_name].victories += int(victory)
+                    replayRecords[game_name].total_games += 1
+                    break
+            else:
+                count = 0
+                for line in ins:
+                    if count == 1:
+                        line = line.strip().split(" ")
+                        score = line[0]
+                        if float(score) == -1000:
+                            replayRecords[game_name].disqualified += 1
+                        else:
+                            replayRecords[game_name].scores.append(float(score))
+                    if count == 2:
+                        line = line.strip().split(" ")
+                        victory = line[0]
+                        replayRecords[game_name].victories += int(victory)
+                        replayRecords[game_name].total_games += 1
+                    
+                    count = count +1 
+                    
+                    if count == 3:
+                        break
 
     t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
 
     # iterate through the records of every game
-    for game in games:
+    for game in sorted(replayRecords.keys()):
         t.add_row(replayRecords[game].getData())
 
     print(t)
