@@ -11,9 +11,12 @@ class GameRecord:
     def __init__(self, name):
         self.name = name
         self.victories = 0
-        self.total_games = 0
+        self.victories_p2 = 0
         self.disqualified = 0
+        self.disqualified_p2 = 0
         self.scores = []
+        self.scores_p2 = []
+        self.total_games = 0
 
     def __str__(self):
         return self.name, self.victories, numpy.mean(self.scores), numpy.std(self.scores)
@@ -21,6 +24,10 @@ class GameRecord:
     def getData(self):
         return [self.name, self.victories*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" +/- {0:.2f}".format(numpy.std(self.scores)), 
                      numpy.min(self.scores), numpy.max(self.scores),
+                    self.disqualified*100/self.total_games]
+    def getDataMulti(self):
+        return [self.name, self.victories*100/self.total_games, self.victories_p2*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" +/- {0:.2f}".format(numpy.std(self.scores)), 
+                    "{0:.2f}".format(numpy.mean(self.scores_p2))+" +/- {0:.2f}".format(numpy.std(self.scores_p2)),numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified*100/self.total_games]
 
 def main(args):
@@ -73,10 +80,17 @@ def main(args):
                             replayRecords[game_name].disqualified += 1
                         else:
                             replayRecords[game_name].scores.append(float(score))
+                        score_p2 = line[1]
+                        if float(score_p2) == -1000:
+                            replayRecords[game_name].disqualified_p2 += 1
+                        else:
+                            replayRecords[game_name].scores_p2.append(float(score_p2))
                     if count == 2:
                         line = line.strip().split(" ")
                         victory = line[0]
+                        victory_p2 = line[1]
                         replayRecords[game_name].victories += int(victory)
+                        replayRecords[game_name].victories_p2 += int(victory_p2)
                         replayRecords[game_name].total_games += 1
                     
                     count = count +1 
@@ -84,11 +98,18 @@ def main(args):
                     if count == 3:
                         break
 
-    t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
+    if multi == False:
+        t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
 
-    # iterate through the records of every game
-    for game in sorted(replayRecords.keys()):
-        t.add_row(replayRecords[game].getData())
+        # iterate through the records of every game
+        for game in sorted(replayRecords.keys()):
+            t.add_row(replayRecords[game].getData())
+    else:
+        t = PrettyTable(['Name', 'Victories%_P1', 'Victories%_P2', 'AvgScore_P1', 'AvgScore_P2','MinScore', 'MaxScore', "Disqualified"])
+
+        # iterate through the records of every game
+        for game in sorted(replayRecords.keys()):
+            t.add_row(replayRecords[game].getDataMulti())
 
     print(t)
 
