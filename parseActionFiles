@@ -23,8 +23,6 @@ class GameRecord:
                      numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified*100/self.total_games]
 
-replayRecords = {}
-
 def main(args):
 
     if len(args) < 1:
@@ -40,7 +38,8 @@ def main(args):
         multi = False
 
     files_list = glob.glob(path)
-    print(path)   
+
+    replayRecords = {}
  
     # for every record file
     for file in files_list:
