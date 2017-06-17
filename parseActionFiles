@@ -52,7 +52,7 @@ def main(args):
     for file in files_list:
         with open(file, "r") as ins:
             # get name of the game
-            game_name = file.split("/")[-1].split("_")[3]
+            game_name = file.split("/")[-1].split("_")[1]
 
             # if needed create a new list of records for this game
             if game_name not in replayRecords.keys():
@@ -67,8 +67,8 @@ def main(args):
                         replayRecords[game_name].disqualified += 1
                     else:
                         replayRecords[game_name].scores.append(float(score))
-                    replayRecords[game_name].victories += int(victory)
-                    replayRecords[game_name].total_games += 1
+                        replayRecords[game_name].victories += int(victory)
+                        replayRecords[game_name].total_games += 1
                     break
             else:
                 count = 0
