@@ -9,7 +9,8 @@ from prettytable import PrettyTable
 
 singleplayer_games = ["aliens", "angelsdemons", "assemblyline", "avoidgeorge", "bait", 
                       "beltmanager", "blacksmoke", "boloadventures", "bomber", "bomberman", 
-                      "boulderchase", "boulderdash", "brainman", "butterflies", "cakybaky", 
+                      "boulderchase", "boulderdash", "brainman", "butterflies", "cakybaky",
+                      "camelRace", "catapults", "chainreaction", "chase", "chipschallenge" 
                       "clusters", "colourescape", "chopper", "cookmepasta", "cops", 
                       "crossfire", "defem", "defender", "digdug", "dungeon", 
                       "eighthpassenger", "eggomania", "enemycitadel", "escape", "factorymanager", 
@@ -58,6 +59,17 @@ class GameRecord:
                     "{0:.2f}".format(numpy.mean(self.scores_p2))+" +/- {0:.2f}".format(numpy.std(self.scores_p2)),numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified]
 
+def parseGameName(string):
+    filename = string.split("/")[-1]
+    words = filename.split("_")
+    for word in words:
+        if word in singleplayer_games or word in multiplayer_games:
+            return word
+    print(filename)
+    print(""""Corrupted file name or unindetified game found.\n
+          Check if all file names contain valid game names in the GVG-AI framework.""")
+    sys.exit()
+
 def main(args):
 
     if len(args) < 1:
@@ -80,7 +92,7 @@ def main(args):
     for file in files_list:
         with open(file, "r") as ins:
             # get name of the game
-            game_name = file.split("/")[-1].split("_")[1]
+            game_name = parseGameName(file)
 
             # if needed create a new list of records for this game
             if game_name not in replayRecords.keys():
