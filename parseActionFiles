@@ -7,6 +7,34 @@ import numpy
 import sys
 from prettytable import PrettyTable
 
+singleplayer_games = ["aliens", "angelsdemons", "assemblyline", "avoidgeorge", "bait", 
+                      "beltmanager", "blacksmoke", "boloadventures", "bomber", "bomberman", 
+                      "boulderchase", "boulderdash", "brainman", "butterflies", "cakybaky", 
+                      "clusters", "colourescape", "chopper", "cookmepasta", "cops", 
+                      "crossfire", "defem", "defender", "digdug", "dungeon", 
+                      "eighthpassenger", "eggomania", "enemycitadel", "escape", "factorymanager", 
+                      "firecaster", "fireman", "firestorms", "freeway", "frogs", 
+                      "garbagecollector", "gymkhana", "hungrybirds", "iceandfire", "ikaruga", 
+                      "infection", "intersection", "islands", "jaws", "killBillVol1", 
+                      "labyrinth", "labyrinthdual", "lasers", "lasers2", "lemmings", 
+                      "missilecommand", "modality", "overload", "pacman", "painter", 
+                      "pokemon", "plants", "plaqueattack", "portals", "raceBet", 
+                      "raceBet2", "realportals", "realsokoban", "rivers", "roadfighter", 
+                      "roguelike", "run", "seaquest", "sheriff", "shipwreck", 
+                      "sokoban", "solarfox", "superman", "surround", "survivezombies", 
+                      "tercio", "thecitadel", "thesnowman", "waitforbreakfast", "watergame", 
+                      "waves", "whackamole", "wildgunman", "witnessprotection", "wrapsokoban", 
+                      "zelda", "zenpuzzle"]
+
+multiplayer_games = ["accelerator", "akkaarrh", "asteroids", "beekeeper", "bombergirl", 
+                    "breedingdragons", "captureflag", "competesokoban", "copsNrobbers", "donkeykong", 
+                    "dragonattack", "drowning", "egghunt", "fatty", "firetruck", 
+                    "football", "ghostbusters", "gotcha", "isawsanta", "klax", 
+                    "mimic", "minesweeper", "minions", "oopsbrokeit", "reflection", 
+                    "rivalry", "romeoNjuliet", "samaritan", "sokoban", "steeplechase", 
+                    "teamescape", "thebridge", "trainride", "treasuremap", "tron", 
+                    "upgrade-x", "uphigh", "warzone", "watchout", "wheelme"]
+
 class GameRecord:
     def __init__(self, name):
         self.name = name
