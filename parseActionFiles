@@ -70,22 +70,32 @@ def parseGameName(string):
           Check if all file names contain valid game names in the GVG-AI framework.""")
     sys.exit()
 
+def parsePlayers(string, multiplayer):
+    
+    filename = string.split("/")[-1]
+    player1 = filename.split("_")[0]
+    if multiplayer is True:
+        player2  = filename.split("/")[-1].split("_")[1]
+    else:
+        player2 = None
+    return player1, player2
+
 def main(args):
 
     if len(args) < 1:
         print("usage: ./parseActionFiles [-m] directoryName")
         sys.exit(1)
-
-    path = os.getcwd()+"/"+args[0]+"/*.txt"
+    
+    controllers = {}
 
     if args[0] == "-m":
         path = os.getcwd()+"/"+args[1]+"/*.txt"
         multi = True
     else:
+        path = os.getcwd()+"/"+args[0]+"/*.txt"
         multi = False
 
     files_list = glob.glob(path)
-
     replayRecords = {}
  
     # for every record file
@@ -93,7 +103,9 @@ def main(args):
         with open(file, "r") as ins:
             # get name of the game
             game_name = parseGameName(file)
-
+                
+            player1, player2 = parsePlayers(file, multi)
+                
             # if needed create a new list of records for this game
             if game_name not in replayRecords.keys():
                 replayRecords[game_name] = GameRecord(game_name)
@@ -111,6 +123,7 @@ def main(args):
                         replayRecords[game_name].total_games += 1
                     break
             else:
+
                 count = 0
                 for line in ins:
                     if count == 1:
