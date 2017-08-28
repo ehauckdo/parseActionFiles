@@ -51,12 +51,12 @@ class GameRecord:
         return self.name, self.victories, numpy.mean(self.scores), numpy.std(self.scores)
     
     def getData(self):
-        return [self.name, self.victories*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" +/- {0:.2f}".format(numpy.std(self.scores)), 
+        return [self.name, self.victories*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores)), 
                      numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified]
     def getDataMulti(self):
-        return [self.name, self.victories*100/self.total_games, self.victories_p2*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" +/- {0:.2f}".format(numpy.std(self.scores)), 
-                    "{0:.2f}".format(numpy.mean(self.scores_p2))+" +/- {0:.2f}".format(numpy.std(self.scores_p2)),numpy.min(self.scores), numpy.max(self.scores),
+        return [self.name, self.victories*100/self.total_games, self.victories_p2*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores)), 
+                    "{0:.2f}".format(numpy.mean(self.scores_p2))+" ± {0:.2f}".format(numpy.std(self.scores_p2)),numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified]
 
 def parseGameName(string):
