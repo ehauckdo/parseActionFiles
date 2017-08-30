@@ -80,6 +80,15 @@ def parsePlayers(string, multiplayer):
         player2 = None
     return player1, player2
 
+def addGameRecord(controllers, player, game_name):
+
+    if player == None:
+        return
+    if player not in controllers.keys():
+        controllers[player] = {} 
+    if game_name not in controllers[player].keys():
+        controllers[player][game_name] = GameRecord(game_name)
+
 def main(args):
 
     if len(args) < 1:
@@ -103,9 +112,10 @@ def main(args):
         with open(file, "r") as ins:
             # get name of the game
             game_name = parseGameName(file)
-                
             player1, player2 = parsePlayers(file, multi)
-                
+            addGameRecord(controllers, player1, game_name)     
+            addGameRecord(controllers, player2, game_name)     
+            
             # if needed create a new list of records for this game
             if game_name not in replayRecords.keys():
                 replayRecords[game_name] = GameRecord(game_name)
