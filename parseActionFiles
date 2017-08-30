@@ -99,10 +99,10 @@ def main(args):
 
     if args[0] == "-m":
         path = os.getcwd()+"/"+args[1]+"/*.txt"
-        multi = True
+        isMultiplayer = True
     else:
         path = os.getcwd()+"/"+args[0]+"/*.txt"
-        multi = False
+        isMultiplayer = False
 
     files_list = glob.glob(path)
     replayRecords = {}
@@ -112,11 +112,11 @@ def main(args):
         with open(file, "r") as ins:
             # get name of the game
             game_name = parseGameName(file)
-            player1, player2 = parsePlayers(file, multi)
+            player1, player2 = parsePlayers(file, isMultiplayer)
             addGameRecord(controllers, player1, game_name)     
             addGameRecord(controllers, player2, game_name)     
             
-            if multi == False:
+            if isMultiplayer == False:
                 for line in ins:
                     data = line.strip().split(" ")
                     victory = data[1]
@@ -129,10 +129,8 @@ def main(args):
                         controllers[player1][game_name].total_games += 1
                     break
             else:
-
-                count = 0
-                for line in ins:
-                    if count == 1:
+                for line_index, line in enumerate(ins):
+                    if line_index == 1:
                         line = line.strip().split(" ")
                         score = line[0]
                         if float(score) == -1000:
@@ -144,20 +142,17 @@ def main(args):
                             replayRecords[game_name].disqualified_p2 += 1
                         else:
                             replayRecords[game_name].scores_p2.append(float(score_p2))
-                    if count == 2:
+                    if line_index == 2:
                         line = line.strip().split(" ")
                         victory = line[0]
                         victory_p2 = line[1]
                         replayRecords[game_name].victories += int(victory)
                         replayRecords[game_name].victories_p2 += int(victory_p2)
                         replayRecords[game_name].total_games += 1
-                    
-                    count = count +1 
-                    
-                    if count == 3:
+                    if line_index == 3:
                         break
 
-    if multi == False:
+    if isMultiplayer == False:
         t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
 
         # iterate through the records of every game
