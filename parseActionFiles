@@ -116,21 +116,17 @@ def main(args):
             addGameRecord(controllers, player1, game_name)     
             addGameRecord(controllers, player2, game_name)     
             
-            # if needed create a new list of records for this game
-            if game_name not in replayRecords.keys():
-                replayRecords[game_name] = GameRecord(game_name)
-
             if multi == False:
                 for line in ins:
-                    line = line.strip().split(" ")
-                    victory = line[1]
-                    score = line[2] 
+                    data = line.strip().split(" ")
+                    victory = data[1]
+                    score = data[2] 
                     if float(score) == -1000:
-                        replayRecords[game_name].disqualified += 1
+                        controllers[player1][game_name].disqualified += 1
                     else:
-                        replayRecords[game_name].scores.append(float(score))
-                        replayRecords[game_name].victories += int(victory)
-                        replayRecords[game_name].total_games += 1
+                        controllers[player1][game_name].scores.append(float(score))
+                        controllers[player1][game_name].victories += int(victory)
+                        controllers[player1][game_name].total_games += 1
                     break
             else:
 
@@ -165,8 +161,8 @@ def main(args):
         t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
 
         # iterate through the records of every game
-        for game in sorted(replayRecords.keys()):
-            t.add_row(replayRecords[game].getData())
+        for game in sorted(controllers[player1].keys()):
+            t.add_row(controllers[player1][game].getData())
     else:
         t = PrettyTable(['Name', 'Victories%_P1', 'Victories%_P2', 'AvgScore_P1', 'AvgScore_P2','MinScore', 'MaxScore', "Disqualified"])
 
