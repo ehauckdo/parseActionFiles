@@ -40,11 +40,8 @@ class GameRecord:
     def __init__(self, name):
         self.name = name
         self.victories = 0
-        self.victories_p2 = 0
         self.disqualified = 0
-        self.disqualified_p2 = 0
         self.scores = []
-        self.scores_p2 = []
         self.total_games = 0
 
     def __str__(self):
@@ -53,10 +50,6 @@ class GameRecord:
     def getData(self):
         return [self.name, self.victories*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores)), 
                      numpy.min(self.scores), numpy.max(self.scores),
-                    self.disqualified]
-    def getDataMulti(self):
-        return [self.name, self.victories*100/self.total_games, self.victories_p2*100/self.total_games, "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores)), 
-                    "{0:.2f}".format(numpy.mean(self.scores_p2))+" ± {0:.2f}".format(numpy.std(self.scores_p2)),numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified]
 
 def parseGameName(string):
