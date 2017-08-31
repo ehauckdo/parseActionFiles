@@ -5,6 +5,7 @@ import os
 import glob
 import numpy
 import sys
+import getopt
 from prettytable import PrettyTable
 
 singleplayer_games = ["aliens", "angelsdemons", "assemblyline", "avoidgeorge", "bait", 
@@ -52,6 +53,11 @@ class GameRecord:
                      numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified]
 
+def usage():
+    print(""""Corrupted file name or unindetified game found.\n
+          Check if all file names contain valid game names in the GVG-AI framework.""")
+    sys.exit()
+
 def parseGameName(string):
     filename = string.split("/")[-1]
     words = filename.split("_")
@@ -59,9 +65,7 @@ def parseGameName(string):
         if word in singleplayer_games or word in multiplayer_games:
             return word
     print(filename)
-    print(""""Corrupted file name or unindetified game found.\n
-          Check if all file names contain valid game names in the GVG-AI framework.""")
-    sys.exit()
+    usage()
 
 def parsePlayers(string, multiplayer):
     
@@ -82,86 +86,102 @@ def addGameRecord(controllers, player, game_name):
     if game_name not in controllers[player].keys():
         controllers[player][game_name] = GameRecord(game_name)
 
+def computeScore(controllers, player, game_name, victory, score):
+
+    if float(score) == -1000:
+        controllers[player][game_name].disqualified += 1
+        if ignoreDisqualified != True:
+            controllers[player][game_name].scores.append(float(score))
+            controllers[player][game_name].total_games += 1
+    else:
+        controllers[player][game_name].scores.append(float(score))
+        controllers[player][game_name].victories += int(victory)
+        controllers[player][game_name].total_games += 1
+
+
 def main(args):
 
     if len(args) < 1:
         print("usage: ./parseActionFiles [-m] directoryName")
         sys.exit(1)
     
+    isMultiplayer = False
+    ignoreDisqualified = False
     controllers = {}
 
-    if args[0] == "-m":
-        path = os.getcwd()+"/"+args[1]+"/*.txt"
-        isMultiplayer = True
-    else:
-        path = os.getcwd()+"/"+args[0]+"/*.txt"
-        isMultiplayer = False
+    try:
+        options, folders = getopt.getopt(args, "mi")
+    except getopt.GetoptError:
+        usage()
+   
+    for opt in options:
+        if opt is "-m":
+            isMultiplayer = True
+        if opt is "-i":
+            ignoreDisqualified = True
 
-    files_list = glob.glob(path)
-    replayRecords = {}
- 
-    # for every record file
-    for file in files_list:
-        with open(file, "r") as ins:
-            # get name of the game
-            game_name = parseGameName(file)
-            player1, player2 = parsePlayers(file, isMultiplayer)
-            addGameRecord(controllers, player1, game_name)     
-            addGameRecord(controllers, player2, game_name)     
-            
-            if isMultiplayer == False:
-                for line in ins:
-                    data = line.strip().split(" ")
-                    victory = data[1]
-                    score = data[2] 
-                    controllers[player1][game_name].scores.append(float(score))
-                    controllers[player1][game_name].victories += int(victory)
-                    controllers[player1][game_name].total_games += 1
-                    if float(score) == -1000:
-                        controllers[player1][game_name].disqualified += 1
-                    break
-            else:
-                for line_index, line in enumerate(ins):
-                    if line_index == 1:
-                        line = line.strip().split(" ")
-                        score = line[0]
-                        controllers[player1][game_name].scores.append(float(score))
+    for folder in folders: 
+        path = os.getcwd()+"/"+folder+"/*.txt"
+        files_list = glob.glob(path)
+
+        # for every record file
+        for file in files_list:
+            with open(file, "r") as ins:
+                # get name of the game
+                game_name = parseGameName(file)
+                player1, player2 = parsePlayers(file, isMultiplayer)
+                addGameRecord(controllers, player1, game_name)     
+                addGameRecord(controllers, player2, game_name)     
+                
+                if isMultiplayer == False:
+                    for line in ins:
+                        data = line.strip().split(" ")
+                        victory = data[1]
+                        score = data[2] 
                         if float(score) == -1000:
                             controllers[player1][game_name].disqualified += 1
-                        score_p2 = line[1]
-                        controllers[player2][game_name].scores.append(float(score_p2))
-                        if float(score_p2) == -1000:
-                            controllers[player2][game_name].disqualified += 1
-                    if line_index == 2:
-                        line = line.strip().split(" ")
-                        victory = line[0]
-                        victory_p2 = line[1]
-                    
-                        controllers[player1][game_name].victories += int(victory)
-                        controllers[player1][game_name].total_games += 1
-
-                        controllers[player2][game_name].victories += int(victory_p2)
-                        controllers[player2][game_name].total_games += 1            
-                    if line_index == 3:
+                            if ignoreDisqualified != True:
+                                controllers[player1][game_name].scores.append(float(score))
+                                controllers[player1][game_name].total_games += 1
+                        else:
+                            controllers[player1][game_name].scores.append(float(score))
+                            controllers[player1][game_name].victories += int(victory)
+                            controllers[player1][game_name].total_games += 1
                         break
+                else:
+                    for line_index, line in enumerate(ins):
+                        if line_index == 1:
+                            line = line.strip().split(" ")
+                            score = line[0]
+                            controllers[player1][game_name].scores.append(float(score))
+                            if float(score) == -1000:
+                                controllers[player1][game_name].disqualified += 1
+                            score_p2 = line[1]
+                            controllers[player2][game_name].scores.append(float(score_p2))
+                            if float(score_p2) == -1000:
+                                controllers[player2][game_name].disqualified += 1
+                        if line_index == 2:
+                            line = line.strip().split(" ")
+                            victory = line[0]
+                            victory_p2 = line[1]
+                        
+                            controllers[player1][game_name].victories += int(victory)
+                            controllers[player1][game_name].total_games += 1
 
-    if isMultiplayer == False:
+                            controllers[player2][game_name].victories += int(victory_p2)
+                            controllers[player2][game_name].total_games += 1            
+                        if line_index == 3:
+                            break
+
+    for c in controllers.keys():
+        print(c)
+            
         t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
 
         # iterate through the records of every game
-        for game in sorted(controllers[player1].keys()):
-            t.add_row(controllers[player1][game].getData())
+        for game in sorted(controllers[c].keys()):
+            t.add_row(controllers[c][game].getData())
         print(t)
-    else:
-        for c in controllers.keys():
-            print(c)
-                
-            t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
-
-            # iterate through the records of every game
-            for game in sorted(controllers[c].keys()):
-                t.add_row(controllers[c][game].getData())
-            print(t)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
