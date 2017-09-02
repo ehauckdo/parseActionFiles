@@ -14,6 +14,20 @@ Simple run the script and pass the directory with action files. The directory mu
 
 Additionaly, you can use the parameter -m for multiplayer games.
 
+### Filename Format
+
+For single player games:
+
+```Controller_Game_AnyOtherInfo```
+
+e.g. sampleMCTS_zelda_Run2_lvl3.log
+
+For multiplayer games:
+
+```Controller1_Controller2_Game_AnyOtherInfo```
+
+e.g. sampleMCTS_sampleRandom_zelda_Run2_lvl3.log
+
 ### Sample Result
 
 (Single player run)
