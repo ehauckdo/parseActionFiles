@@ -8,11 +8,14 @@ Python script to parse a list of action files from the [GVG-AI framework](http:/
 
 ### How to use
 
-```./parseActionFiles [-m] sampleActionFiles```
+```./parseActionFiles [options] inputFolders```
 
-Simple run the script and pass the directory with action files. The directory must be in the same folder as of the script.
+Options:
 
-Additionaly, you can use the parameter -m for multiplayer games.
+
+-m MultiplayerLogs: parse multiplayer execution logs
+
+-i IgnoreDisqualified: victory percentages and score won't be affected by runs in which the controller was disqualified
 
 ### Filename Format
 
