@@ -98,7 +98,6 @@ def computeScore(controllers, player, game_name, victory, score, ignoreDisqualif
         controllers[player][game_name].victories += int(victory)
         controllers[player][game_name].total_games += 1
 
-
 def main(args):
 
     if len(args) < 1:
@@ -149,7 +148,6 @@ def main(args):
                             line = line.strip().split(" ")
                             victory = line[0]
                             victory_p2 = line[1]
-                        
                             computeScore(controllers, player1, game_name, victory, score, ignoreDisqualified)
                             computeScore(controllers, player2, game_name, victory_p2, score_p2, ignoreDisqualified)
                         if line_index == 3:
@@ -157,10 +155,7 @@ def main(args):
 
     for c in controllers.keys():
         print(c)
-            
         t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
-
-        # iterate through the records of every game
         for game in sorted(controllers[c].keys()):
             t.add_row(controllers[c][game].getData())
         print(t)
