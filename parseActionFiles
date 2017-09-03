@@ -86,7 +86,7 @@ def addGameRecord(controllers, player, game_name):
     if game_name not in controllers[player].keys():
         controllers[player][game_name] = GameRecord(game_name)
 
-def computeScore(controllers, player, game_name, victory, score):
+def computeScore(controllers, player, game_name, victory, score, ignoreDisqualified):
 
     if float(score) == -1000:
         controllers[player][game_name].disqualified += 1
@@ -113,11 +113,11 @@ def main(args):
         options, folders = getopt.getopt(args, "mi")
     except getopt.GetoptError:
         usage()
-   
-    for opt in options:
-        if opt is "-m":
+ 
+    for opt, value in options:
+        if opt == "-m":
             isMultiplayer = True
-        if opt is "-i":
+        if opt == "-i":
             ignoreDisqualified = True
 
     for folder in folders: 
@@ -137,39 +137,42 @@ def main(args):
                     for line in ins:
                         data = line.strip().split(" ")
                         victory = data[1]
-                        score = data[2] 
-                        if float(score) == -1000:
-                            controllers[player1][game_name].disqualified += 1
-                            if ignoreDisqualified != True:
-                                controllers[player1][game_name].scores.append(float(score))
-                                controllers[player1][game_name].total_games += 1
-                        else:
-                            controllers[player1][game_name].scores.append(float(score))
-                            controllers[player1][game_name].victories += int(victory)
-                            controllers[player1][game_name].total_games += 1
+                        score = data[2]
+                        computeScore(controllers, player1, game_name, victory, score, ignoreDisqualified) 
+                        #if float(score) == -1000:
+                        #    controllers[player1][game_name].disqualified += 1
+                        #    if ignoreDisqualified != True:
+                        #        controllers[player1][game_name].scores.append(float(score))
+                        #        controllers[player1][game_name].total_games += 1
+                        #else:
+                        #    controllers[player1][game_name].scores.append(float(score))
+                        #    controllers[player1][game_name].victories += int(victory)
+                        #    controllers[player1][game_name].total_games += 1
                         break
                 else:
                     for line_index, line in enumerate(ins):
                         if line_index == 1:
                             line = line.strip().split(" ")
                             score = line[0]
-                            controllers[player1][game_name].scores.append(float(score))
-                            if float(score) == -1000:
-                                controllers[player1][game_name].disqualified += 1
+                            #controllers[player1][game_name].scores.append(float(score))
+                            #if float(score) == -1000:
+                            #    controllers[player1][game_name].disqualified += 1
                             score_p2 = line[1]
-                            controllers[player2][game_name].scores.append(float(score_p2))
-                            if float(score_p2) == -1000:
-                                controllers[player2][game_name].disqualified += 1
+                            #controllers[player2][game_name].scores.append(float(score_p2))
+                            #if float(score_p2) == -1000:
+                            #    controllers[player2][game_name].disqualified += 1
                         if line_index == 2:
                             line = line.strip().split(" ")
                             victory = line[0]
                             victory_p2 = line[1]
                         
-                            controllers[player1][game_name].victories += int(victory)
-                            controllers[player1][game_name].total_games += 1
+                            computeScore(controllers, player1, game_name, victory, score, ignoreDisqualified)
+                            computeScore(controllers, player2, game_name, victory_p2, score_p2, ignoreDisqualified)
+                            #controllers[player1][game_name].victories += int(victory)
+                            #controllers[player1][game_name].total_games += 1
 
-                            controllers[player2][game_name].victories += int(victory_p2)
-                            controllers[player2][game_name].total_games += 1            
+                            #controllers[player2][game_name].victories += int(victory_p2)
+                            #controllers[player2][game_name].total_games += 1            
                         if line_index == 3:
                             break
 
