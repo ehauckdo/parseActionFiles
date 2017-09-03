@@ -54,8 +54,8 @@ class GameRecord:
                     self.disqualified]
 
 def usage():
-    print(""""Corrupted file name or unindetified game found.\n
-          Check if all file names contain valid game names in the GVG-AI framework.""")
+    print("Corrupted file name or unindetified game found.")
+    print("Check if all file names contain valid game names in the GVG-AI framework.")
     sys.exit()
 
 def parseGameName(string):
@@ -102,9 +102,8 @@ def computeScore(controllers, player, game_name, victory, score, ignoreDisqualif
 def main(args):
 
     if len(args) < 1:
-        print("usage: ./parseActionFiles [-m] directoryName")
-        sys.exit(1)
-    
+        usage()
+ 
     isMultiplayer = False
     ignoreDisqualified = False
     controllers = {}
@@ -139,28 +138,13 @@ def main(args):
                         victory = data[1]
                         score = data[2]
                         computeScore(controllers, player1, game_name, victory, score, ignoreDisqualified) 
-                        #if float(score) == -1000:
-                        #    controllers[player1][game_name].disqualified += 1
-                        #    if ignoreDisqualified != True:
-                        #        controllers[player1][game_name].scores.append(float(score))
-                        #        controllers[player1][game_name].total_games += 1
-                        #else:
-                        #    controllers[player1][game_name].scores.append(float(score))
-                        #    controllers[player1][game_name].victories += int(victory)
-                        #    controllers[player1][game_name].total_games += 1
                         break
                 else:
                     for line_index, line in enumerate(ins):
                         if line_index == 1:
                             line = line.strip().split(" ")
                             score = line[0]
-                            #controllers[player1][game_name].scores.append(float(score))
-                            #if float(score) == -1000:
-                            #    controllers[player1][game_name].disqualified += 1
                             score_p2 = line[1]
-                            #controllers[player2][game_name].scores.append(float(score_p2))
-                            #if float(score_p2) == -1000:
-                            #    controllers[player2][game_name].disqualified += 1
                         if line_index == 2:
                             line = line.strip().split(" ")
                             victory = line[0]
@@ -168,11 +152,6 @@ def main(args):
                         
                             computeScore(controllers, player1, game_name, victory, score, ignoreDisqualified)
                             computeScore(controllers, player2, game_name, victory_p2, score_p2, ignoreDisqualified)
-                            #controllers[player1][game_name].victories += int(victory)
-                            #controllers[player1][game_name].total_games += 1
-
-                            #controllers[player2][game_name].victories += int(victory_p2)
-                            #controllers[player2][game_name].total_games += 1            
                         if line_index == 3:
                             break
 
