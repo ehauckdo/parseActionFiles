@@ -53,6 +53,12 @@ class GameRecord:
                      numpy.min(self.scores), numpy.max(self.scores),
                     self.disqualified]
 
+    def getVictoriesPercentage(self):
+        return self.victories*100/self.total_games
+    
+    def getAverageScore(self):
+        return "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores))
+
 def usage():
     print("Corrupted file name or unindetified game found.")
     print("Check if all file names contain valid game names in the GVG-AI framework.")
@@ -105,6 +111,7 @@ def main(args):
  
     isMultiplayer = False
     ignoreDisqualified = False
+    compareControllers = True 
     controllers = {}
 
     try:
@@ -153,12 +160,31 @@ def main(args):
                         if line_index == 3:
                             break
 
-    for c in controllers.keys():
-        print(c)
-        t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
-        for game in sorted(controllers[c].keys()):
-            t.add_row(controllers[c][game].getData())
-        print(t)
+    if compareControllers != True:
+        for c in controllers.keys():
+            print(c)
+            t = PrettyTable(['Name', 'Victories%', 'AvgScore', 'MinScore', 'MaxScore', "Disqualified"])
+            for game in sorted(controllers[c].keys()):
+                t.add_row(controllers[c][game].getData())
+            print(t)
+    else:
+        game_list = []
+        for c in controllers.keys():
+            for game in sorted(controllers[c].keys()):
+                if game not in game_list:
+                    game_list.append(game)
+            columns = ['Name']
+            columns.extend(sorted(controllers.keys()))
+            t = PrettyTable(columns)
+        for game in game_list:
+            row = [game]
+            for c in sorted(controllers.keys()):
+               record = str(controllers[c][game].getVictoriesPercentage())
+               record += " ("+str(controllers[c][game].getAverageScore())+")"
+               row.append(record)
+            t.add_row(row)
+        print(t)              
+     
 
 if __name__ == '__main__':
     main(sys.argv[1:])
