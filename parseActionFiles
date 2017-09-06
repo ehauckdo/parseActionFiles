@@ -110,11 +110,11 @@ def main(args):
  
     isMultiplayer = False
     ignoreDisqualified = False
-    compareControllers = True 
+    compareControllers = False 
     controllers = {}
 
     try:
-        options, folders = getopt.getopt(args, "mi")
+        options, folders = getopt.getopt(args, "mic")
     except getopt.GetoptError:
         usage()
  
@@ -123,6 +123,8 @@ def main(args):
             isMultiplayer = True
         if opt == "-i":
             ignoreDisqualified = True
+        if opt == "-c":
+            compareControllers = True
 
     for folder in folders: 
         path = os.getcwd()+"/"+folder+"/*.txt"
