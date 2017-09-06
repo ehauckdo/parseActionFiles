@@ -177,8 +177,8 @@ def main(args):
         for game in games:
             row = [game]
             for c in sorted(controllers.keys()):
-               record = str(controllers[c][game].getVictoriesPercentage())
-               record += " ("+str(controllers[c][game].getAverageScore())+")"
+               record = ' {0: >3}%'.format(str(controllers[c][game].getVictoriesPercentage()))
+               record += "   {0: ^19}".format((("("+str(controllers[c][game].getAverageScore()+")"))))
                row.append(record)
             t.add_row(row)
         print(t)              
