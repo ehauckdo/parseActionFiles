@@ -112,6 +112,7 @@ def main(args):
     ignoreDisqualified = False
     compareControllers = False 
     controllers = {}
+    games = set()
 
     try:
         options, folders = getopt.getopt(args, "mic")
@@ -135,6 +136,7 @@ def main(args):
             with open(file, "r") as ins:
                 # get name of the game
                 game_name = parseGameName(file)
+                games.add(game_name)
                 player1, player2 = parsePlayers(file, isMultiplayer)
                 addGameRecord(controllers, player1, game_name)     
                 addGameRecord(controllers, player2, game_name)     
@@ -169,15 +171,10 @@ def main(args):
                 t.add_row(controllers[c][game].getData())
             print(t)
     else:
-        game_list = []
-        for c in controllers.keys():
-            for game in sorted(controllers[c].keys()):
-                if game not in game_list:
-                    game_list.append(game)
-            columns = ['Name']
-            columns.extend(sorted(controllers.keys()))
-            t = PrettyTable(columns)
-        for game in game_list:
+        columns = ['Name']
+        columns.extend(sorted(controllers.keys()))
+        t = PrettyTable(columns)
+        for game in games:
             row = [game]
             for c in sorted(controllers.keys()):
                record = str(controllers[c][game].getVictoriesPercentage())
