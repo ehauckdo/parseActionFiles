@@ -17,6 +17,8 @@ Options:
 
 -i IgnoreDisqualified: victory percentages and score won't be affected by runs in which the controller was disqualified
 
+-c Compare: print a unique table comparing percentage of wins and average score for all controllers found
+
 ### Filename Format
 
 For single player games:
