@@ -1,5 +1,17 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+usage: ./parseActionFiles [options] inputFolders
+
+    options:
+    -m MultiplayerLogs: parse multiplayer execution logs
+    -i IgnoreDisqualified: victory percentages and score won't be 
+       affected by runs in which the controller was disqualified
+    -c Compare: print a unique table comparing percentage of wins 
+       and average score for all controllers found
+"""
+
+
 from __future__ import print_function
 import os
 import glob
@@ -59,12 +71,13 @@ class GameRecord:
         return "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores))
 
 def usage():
-    print("usage: /parseActionFiles [options] inputFolders")
-    
+    print(__doc__)
+    sys.exit(2)
+
 def error():
     print("Corrupted file name or unindetified game found.")
     print("Check if all file names contain valid game names in the GVG-AI framework.")
-    sys.exit()
+    sys.exit(2)
     
 
 def parseGameName(string):
