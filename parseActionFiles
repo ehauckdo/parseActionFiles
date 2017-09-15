@@ -59,9 +59,13 @@ class GameRecord:
         return "{0:.2f}".format(numpy.mean(self.scores))+" ± {0:.2f}".format(numpy.std(self.scores))
 
 def usage():
+    print("usage: /parseActionFiles [options] inputFolders")
+    
+def error():
     print("Corrupted file name or unindetified game found.")
     print("Check if all file names contain valid game names in the GVG-AI framework.")
     sys.exit()
+    
 
 def parseGameName(string):
     filename = string.split("/")[-1]
